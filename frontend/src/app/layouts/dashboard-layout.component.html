@@ -1,0 +1,55 @@
+<div class="shell" [class.menu-open]="menuOpen()">
+  <aside class="sidebar">
+    <a routerLink="/dashboard" class="brand" aria-label="TT SmartOps, accueil">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span>
+        <strong>SmartOps</strong>
+        <small>Tunisie Telecom</small>
+      </span>
+    </a>
+
+    <nav aria-label="Navigation principale">
+      @for (section of sections(); track section.title) {
+        <div class="nav-section">
+          <span class="nav-title">{{ section.title }}</span>
+          @for (item of section.items; track item.path) {
+            <a [routerLink]="item.path" routerLinkActive="active"
+               [routerLinkActiveOptions]="{ exact: item.path === '/leaves' || item.path === '/dashboard' }">
+              {{ item.label }}
+              @if (item.path === '/notifications' && notifications.unread() > 0) {
+                <span class="count">{{ notifications.unread() }}</span>
+              }
+            </a>
+          }
+        </div>
+      }
+    </nav>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <button class="btn btn-sm menu-btn" (click)="menuOpen.set(!menuOpen())" aria-label="Ouvrir le menu">Menu</button>
+      <div class="spacer"></div>
+      <a routerLink="/notifications" class="bell" [attr.aria-label]="notifications.unread() + ' notification(s) non lue(s)'">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+        </svg>
+        @if (notifications.unread() > 0) { <span class="dot">{{ notifications.unread() }}</span> }
+      </a>
+      @if (user(); as u) {
+        <div class="user">
+          <span class="avatar" aria-hidden="true">{{ initials() }}</span>
+          <span class="user-text">
+            <strong>{{ u.fullName }}</strong>
+            <small>{{ u.role | label }}</small>
+          </span>
+        </div>
+      }
+      <button class="btn btn-sm" (click)="logout()">Se déconnecter</button>
+    </header>
+
+    <main class="content">
+      <router-outlet />
+    </main>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+# Secrets et fichiers locaux
+.env
+COMPTES.txt
+
+# Rapport de stage (local uniquement)
+rapport/
+
+# Build et dépendances
+backend/target/
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+
+# Journaux
+*.log
+
+# IDE et système
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db

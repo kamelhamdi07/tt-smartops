@@ -1,0 +1,20 @@
+# TT SmartOps : exécution locale. La base PostgreSQL est hébergée sur Neon (pas de conteneur DB).
+services:
+  backend:
+    build: ./backend
+    container_name: smartops-backend
+    env_file: .env
+    environment:
+      TZ: Africa/Tunis
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    container_name: smartops-frontend
+    depends_on:
+      - backend
+    ports:
+      - "4200:80"
+    restart: unless-stopped

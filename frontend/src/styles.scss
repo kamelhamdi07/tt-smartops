@@ -1,0 +1,195 @@
+/* ================================================================
+   TT SmartOps : système visuel
+   Bleu Tunisie Telecom pour l'action, marine pour la structure,
+   cyan "signal" réservé à la disponibilité. Les couleurs vives ne
+   servent qu'à porter une information (priorité, statut, conflit).
+   ================================================================ */
+
+:root {
+  --navy: #0b2a4a;
+  --navy-2: #12385f;
+  --blue: #0067b1;
+  --blue-soft: #e6f0f9;
+  --signal: #00a6b4;
+  --signal-soft: #e0f5f7;
+  --surface: #f4f6f9;
+  --card: #ffffff;
+  --ink: #16202b;
+  --ink-2: #4a5a6b;
+  --ink-3: #7b8a99;
+  --line: #dde3ea;
+
+  --ok: #2e7d32;     --ok-soft: #e8f3e9;
+  --warn: #b26a00;   --warn-soft: #fdf1df;
+  --danger: #c62828; --danger-soft: #fbe9e9;
+
+  --radius: 6px;
+  --radius-lg: 10px;
+  --shadow: 0 1px 2px rgba(11, 42, 74, .06);
+  --font: 'IBM Plex Sans', 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--surface);
+  font-variant-numeric: tabular-nums;
+}
+
+h1, h2, h3 { margin: 0; line-height: 1.25; font-weight: 600; }
+h1 { font-size: 1.5rem; }
+h2 { font-size: 1.125rem; }
+h3 { font-size: 1rem; }
+
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+
+/* ---------- Mise en page de page ---------- */
+.page { display: flex; flex-direction: column; gap: 20px; }
+.page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.page-head p { margin: 4px 0 0; color: var(--ink-2); }
+.grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+.muted { color: var(--ink-3); }
+.row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.spacer { flex: 1; }
+
+/* ---------- Carte ---------- */
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+}
+.card-body { padding: 20px; }
+.card-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 14px 20px; border-bottom: 1px solid var(--line);
+}
+
+/* ---------- Boutons ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  height: 36px; padding: 0 14px;
+  font: inherit; font-weight: 500;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--card); color: var(--ink);
+  cursor: pointer;
+}
+.btn:hover { border-color: var(--ink-3); }
+.btn:disabled { opacity: .55; cursor: not-allowed; }
+.btn-primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+.btn-primary:hover { background: #00599a; border-color: #00599a; }
+.btn-danger { color: var(--danger); border-color: #efc4c4; }
+.btn-danger:hover { background: var(--danger-soft); border-color: var(--danger); }
+.btn-sm { height: 30px; padding: 0 10px; font-size: 13px; }
+.btn-link { border: none; background: none; color: var(--blue); padding: 0; height: auto; }
+
+/* ---------- Formulaires ---------- */
+.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field.full { grid-column: 1 / -1; }
+.field label { font-weight: 500; font-size: 13px; color: var(--ink-2); }
+.input, select.input, textarea.input {
+  height: 36px; padding: 0 10px;
+  font: inherit; color: var(--ink);
+  border: 1px solid var(--line); border-radius: var(--radius);
+  background: #fff;
+}
+textarea.input { height: auto; min-height: 84px; padding: 8px 10px; resize: vertical; }
+.input:focus { border-color: var(--blue); outline: none; box-shadow: 0 0 0 3px var(--blue-soft); }
+.input.ng-invalid.ng-touched { border-color: var(--danger); }
+.field-error { color: var(--danger); font-size: 12px; }
+.checkbox { display: flex; align-items: center; gap: 8px; font-weight: 500; }
+
+/* ---------- Tableau ---------- */
+.table-wrap { overflow-x: auto; }
+table.table { width: 100%; border-collapse: collapse; }
+.table th {
+  text-align: left; font-size: 12px; font-weight: 600; color: var(--ink-2);
+  padding: 10px 16px; border-bottom: 1px solid var(--line); background: #fafbfc; white-space: nowrap;
+}
+.table td { padding: 12px 16px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.table tr:last-child td { border-bottom: none; }
+.table tbody tr.clickable { cursor: pointer; }
+.table tbody tr.clickable:hover { background: #f8fafc; }
+.cell-strong { font-weight: 600; }
+.cell-sub { display: block; font-size: 12px; color: var(--ink-3); }
+
+/* ---------- Badges ---------- */
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 22px; padding: 0 8px; border-radius: 4px;
+  font-size: 12px; font-weight: 500; white-space: nowrap;
+  background: #eef1f4; color: var(--ink-2);
+}
+.badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.badge.info { background: var(--blue-soft); color: var(--blue); }
+.badge.ok { background: var(--ok-soft); color: var(--ok); }
+.badge.warn { background: var(--warn-soft); color: var(--warn); }
+.badge.danger { background: var(--danger-soft); color: var(--danger); }
+.badge.signal { background: var(--signal-soft); color: #00808b; }
+
+/* ---------- Messages ---------- */
+.alert { padding: 12px 16px; border-radius: var(--radius); border: 1px solid; }
+.alert ul { margin: 6px 0 0; padding-left: 18px; }
+.alert-error { background: var(--danger-soft); border-color: #efc4c4; color: #8e1c1c; }
+.alert-ok { background: var(--ok-soft); border-color: #c4e2c6; color: #1e5a21; }
+
+.empty { padding: 40px 20px; text-align: center; color: var(--ink-2); }
+.empty strong { display: block; color: var(--ink); margin-bottom: 4px; }
+
+.loading { padding: 32px; text-align: center; color: var(--ink-3); }
+
+/* ---------- Pagination ---------- */
+.pager { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-top: 1px solid var(--line); color: var(--ink-2); }
+
+/* ---------- Modale ---------- */
+.modal-backdrop {
+  position: fixed; inset: 0; background: rgba(11, 42, 74, .4);
+  display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 50;
+}
+.modal { width: min(560px, 100%); max-height: 90vh; overflow: auto; }
+
+/* ---------- Définitions (détails) ---------- */
+dl.details { display: grid; grid-template-columns: 160px 1fr; gap: 10px 16px; margin: 0; }
+dl.details dt { color: var(--ink-3); }
+dl.details dd { margin: 0; }
+
+/* ---------- Écrans de connexion / inscription ---------- */
+.auth-form { width: min(400px, 100%); display: flex; flex-direction: column; gap: 18px; }
+.auth-form .auth-head h1 { font-size: 26px; margin-bottom: 6px; }
+.auth-form .auth-head p { margin: 0; color: var(--ink-2); }
+.auth-form .input { width: 100%; min-width: 0; height: 44px; padding: 0 14px; font-size: 15px; }
+.auth-form .field { min-width: 0; }
+.auth-form .field-error { margin-top: -2px; }
+.auth-form .btn-primary { height: 46px; font-size: 15px; font-weight: 600; justify-content: center; gap: 10px; }
+.auth-form .switch { margin: 4px 0 0; padding-top: 18px; border-top: 1px solid var(--line); text-align: center; color: var(--ink-2); }
+.auth-form .switch a { font-weight: 600; }
+.auth-form .alert { display: flex; gap: 10px; align-items: flex-start; }
+.auth-form .alert::before { content: '!'; flex-shrink: 0; width: 18px; height: 18px; margin-top: 2px; border-radius: 50%;
+  display: grid; place-items: center; font-size: 12px; font-weight: 700; background: var(--danger); color: #fff; }
+
+.password { position: relative; display: flex; }
+.password .input { flex: 1; padding-right: 92px; }
+.password .toggle { position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+  height: 32px; padding: 0 10px; border: none; border-radius: var(--radius); background: transparent;
+  font: inherit; font-size: 13px; font-weight: 500; color: var(--blue); cursor: pointer; }
+.password .toggle:hover { background: var(--blue-soft); }
+
+.spinner { width: 16px; height: 16px; border-radius: 50%; border: 2px solid rgba(255,255,255,.4); border-top-color: #fff;
+  animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }

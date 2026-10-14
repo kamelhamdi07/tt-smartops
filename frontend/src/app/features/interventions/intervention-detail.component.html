@@ -1,0 +1,92 @@
+<div class="page">
+  <a routerLink="/interventions" class="back">← Interventions</a>
+
+  <app-error-alert [error]="error()" />
+
+  @if (item(); as i) {
+    <header class="head card" [class]="'head card prio-' + i.priority">
+      <div class="head-main">
+        <span class="ref">{{ i.reference }}</span>
+        <h1>{{ i.title }}</h1>
+        <div class="row">
+          <app-badge [value]="i.status" />
+          <app-badge [value]="i.priority" />
+          @if (i.late) { <span class="badge danger">En retard</span> }
+          <span class="muted">{{ i.type | label }} · {{ i.location }}</span>
+        </div>
+      </div>
+      <div class="head-actions">
+        @if (canEdit()) { <a class="btn" [routerLink]="['/interventions', i.id, 'edit']">Modifier / planifier</a> }
+        @for (a of actions(); track a.key) {
+          <button class="btn" [class.btn-primary]="a.primary" [class.btn-danger]="a.danger"
+                  [disabled]="busy()" (click)="run(a)">{{ a.label }}</button>
+        }
+      </div>
+    </header>
+
+    <div class="layout">
+      <div class="col">
+        <section class="card">
+          <div class="card-head"><h2>Détails</h2></div>
+          <div class="card-body">
+            <dl class="details">
+              <dt>Créneau prévu</dt>
+              <dd>
+                @if (i.plannedStart) {
+                  {{ i.plannedStart | date: 'EEEE d MMMM y' }}, {{ i.plannedStart | date: 'HH:mm' }}–{{ i.plannedEnd | date: 'HH:mm' }}
+                } @else { <span class="muted">Non planifiée</span> }
+              </dd>
+              <dt>Échéance</dt><dd>{{ i.dueDate ? (i.dueDate | date: 'dd/MM/yyyy') : '—' }}</dd>
+              <dt>Spécialité requise</dt><dd>{{ i.requiredSpecialty | label }}</dd>
+              <dt>Équipe</dt><dd>{{ i.teamName || '—' }}</dd>
+              <dt>Équipement</dt><dd>{{ i.equipmentName || '—' }}</dd>
+              <dt>Véhicule</dt><dd>{{ i.vehiclePlate || '—' }}</dd>
+              <dt>Techniciens</dt>
+              <dd>
+                @for (t of i.technicians; track t.id) {
+                  <span class="tech">{{ t.fullName }}
+                    <span class="muted">{{ t.acknowledgedAt ? '· vu le ' + (t.acknowledgedAt | date: 'dd/MM HH:mm') : '· non consulté' }}</span>
+                  </span>
+                } @empty { <span class="muted">Aucun</span> }
+              </dd>
+              @if (i.actualStart) {
+                <dt>Réalisation</dt>
+                <dd>{{ i.actualStart | date: 'dd/MM HH:mm' }} → {{ i.actualEnd ? (i.actualEnd | date: 'dd/MM HH:mm') : 'en cours' }}</dd>
+              }
+              @if (i.cancelReason) { <dt>Motif d’annulation</dt><dd>{{ i.cancelReason }}</dd> }
+              <dt>Créée par</dt><dd>{{ i.createdBy }} le {{ i.createdAt | date: 'dd/MM/yyyy' }}</dd>
+            </dl>
+            @if (i.description) { <p class="desc">{{ i.description }}</p> }
+          </div>
+        </section>
+
+        @if (showAssignment()) {
+          <app-assignment-panel [intervention]="i" (changed)="onChanged($event)" />
+        } @else if (isManager && !i.plannedStart && i.status === 'NOUVELLE') {
+          <div class="card card-body muted">Planifiez le créneau pour voir les techniciens disponibles et affecter l’intervention.</div>
+        }
+
+        @if (showReport()) {
+          <app-report-panel [intervention]="i" [isAssignedTechnician]="!!myAssignment()" [isManager]="isManager"
+                            (changed)="onChanged()" />
+        }
+      </div>
+
+      <aside class="card history">
+        <div class="card-head"><h2>Historique</h2></div>
+        <ol>
+          @for (h of history(); track $index) {
+            <li>
+              <app-badge [value]="h.toStatus" />
+              <span class="when">{{ h.changedAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+              <span class="muted">{{ h.changedBy }}</span>
+              @if (h.comment) { <span class="comment">{{ h.comment }}</span> }
+            </li>
+          }
+        </ol>
+      </aside>
+    </div>
+  } @else if (!error()) {
+    <div class="loading">Chargement…</div>
+  }
+</div>
